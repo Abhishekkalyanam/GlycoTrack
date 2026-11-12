@@ -29,7 +29,7 @@ export default function Layout({ children }) {
           <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-2 font-medium">
             <ShieldAlert className="w-4 h-4 text-[#101310] shrink-0" />
             <span>
-              <strong>Medical Disclaimer:</strong> Sweety is a glycemic self-monitoring and wellness tracking tool. It does not provide medical diagnosis or treatment advice. Consult a healthcare provider for medical inquiries.
+              <strong>Medical Disclaimer:</strong> GlycoTrack is a glycemic self-monitoring and wellness tracking tool. It does not provide medical diagnosis or treatment advice. Consult a healthcare provider for medical inquiries.
             </span>
           </div>
         </footer>

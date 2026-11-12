@@ -66,17 +66,17 @@ export default function Sidebar({ isMobileOpen, onCloseMobile }) {
               to="/"
               onClick={onCloseMobile}
               className="flex items-center gap-3"
-              title="Sweety – Blood Glucose Tracker"
+              title="GlycoTrack – Blood Glucose Tracker"
             >
               <div className="w-12 h-12 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/10 flex items-center justify-center text-[#C5F53C] shadow-lg transition-transform hover:scale-105 shrink-0">
                 <Activity className="w-6 h-6 stroke-[2.5]" />
               </div>
               <div className="lg:hidden">
                 <span className="text-base font-black text-white tracking-tight block">
-                  Sweety
+                  GlycoTrack
                 </span>
                 <span className="text-[10px] font-bold text-[#C5F53C] uppercase tracking-wider block">
-                  Glucose Tracker
+                  Blood Glucose Tracker
                 </span>
               </div>
             </Link>

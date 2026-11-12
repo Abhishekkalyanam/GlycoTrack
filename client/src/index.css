@@ -1,6 +1,18 @@
 @import "tailwindcss";
 
 @theme {
+  --color-glycotrack-bg: #F7F8F5;
+  --color-glycotrack-sidebar: #101310;
+  --color-glycotrack-lime: #C5F53C;
+  --color-glycotrack-text: #171917;
+  --color-glycotrack-muted: #777D78;
+  --color-glycotrack-card: #FFFFFF;
+  --color-glycotrack-border: #E9ECE7;
+  --color-glycotrack-blue: #3789F5;
+  --color-glycotrack-orange: #FF963D;
+  --color-glycotrack-red: #F15B52;
+
+  /* Legacy aliases */
   --color-sweety-bg: #F7F8F5;
   --color-sweety-sidebar: #101310;
   --color-sweety-lime: #C5F53C;

@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 
 async function runVerification() {
   console.log("================================================================================");
-  console.log("  SWEETY APPLICATION - COMPREHENSIVE REQUIREMENTS VERIFICATION SUITE");
+  console.log("  GLYCOTRACK APPLICATION - COMPREHENSIVE REQUIREMENTS VERIFICATION SUITE");
   console.log("================================================================================");
 
   const results = [];

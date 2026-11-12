@@ -1,4 +1,6 @@
-# Sweety – Blood Glucose Tracker
+# GlycoTrack – Blood Glucose Tracker
+
+> **Your glucose. Your health. Your insights.**
 
 A modern, full-stack healthcare web application designed for diabetic and pre-diabetic patients to track, manage, and analyze daily blood glucose levels. Built with robust validations, user data isolation, and comprehensive reporting.
 
@@ -31,9 +33,9 @@ Developed for the **Kenpath Junior Full Stack Developer Technical Assessment**.
 
 ## Project Overview
 
-**Sweety** is a responsive web application tailored for glycemic self-monitoring. Patients can record blood sugar measurements across four standardized daily time slots, view trends, detect abnormal levels, and review structured reports (Daily, Month-to-date, and Previous Month).
+**GlycoTrack** is a responsive web application tailored for glycemic self-monitoring. Patients can record blood sugar measurements across four standardized daily time slots, view trends, detect abnormal levels, and review structured reports (Daily, Month-to-date, and Previous Month).
 
-> **Disclaimer:** Sweety is a tracking and self-monitoring tool and does not provide medical diagnoses or treatment advice. Always consult a physician for health concerns.
+> **Disclaimer:** GlycoTrack is a tracking and self-monitoring tool and does not provide medical diagnoses or treatment advice. Always consult a physician for health concerns.
 
 ---
 
@@ -94,7 +96,7 @@ Developed for the **Kenpath Junior Full Stack Developer Technical Assessment**.
 ## Project Architecture
 
 ```
-Sweety-Blood-Glucose-Tracker/
+GlycoTrack-Blood-Glucose-Tracker/
 ├── client/                     # Frontend React application
 │   ├── public/
 │   │   └── favicon.svg         # Healthcare activity icon

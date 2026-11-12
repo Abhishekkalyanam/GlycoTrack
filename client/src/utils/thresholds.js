@@ -41,3 +41,4 @@ export function getGlucoseIndicator(value) {
     description: `Informational reference: within ${GLUCOSE_THRESHOLDS.low}–${GLUCOSE_THRESHOLDS.elevated} mg/dl reference range`,
   };
 }
+

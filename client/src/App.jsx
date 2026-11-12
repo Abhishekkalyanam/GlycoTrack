@@ -22,7 +22,7 @@ function ProtectedRoute({ children }) {
         <div className="flex flex-col items-center gap-3 text-[#171917]">
           <div className="w-9 h-9 border-3 border-[#101310] border-t-[#C5F53C] rounded-full animate-spin" />
           <span className="text-xs font-bold uppercase tracking-wider text-[#777D78]">
-            Loading Sweety...
+            Loading GlycoTrack...
           </span>
         </div>
       </div>
@@ -45,7 +45,7 @@ function PublicRoute({ children }) {
         <div className="flex flex-col items-center gap-3 text-[#171917]">
           <div className="w-9 h-9 border-3 border-[#101310] border-t-[#C5F53C] rounded-full animate-spin" />
           <span className="text-xs font-bold uppercase tracking-wider text-[#777D78]">
-            Loading Sweety...
+            Loading GlycoTrack...
           </span>
         </div>
       </div>

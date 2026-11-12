@@ -44,16 +44,16 @@ export default function Login() {
   return (
     <div className="min-h-screen bg-[#F7F8F5] flex items-center justify-center p-4">
       <div className="bg-white max-w-md w-full rounded-3xl shadow-xl border border-[#E9ECE7] p-8 sm:p-9">
-        {/* Header with Sweety Pulse Logo */}
+        {/* Header with GlycoTrack Pulse Logo */}
         <div className="text-center mb-8">
           <div className="w-14 h-14 bg-[#101310] text-[#C5F53C] rounded-2xl flex items-center justify-center mx-auto mb-3.5 shadow-lg">
             <Activity className="w-7 h-7 stroke-[2.5]" />
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-[#171917] tracking-tight">
-            Welcome to Sweety
+            Welcome to GlycoTrack
           </h1>
           <p className="text-xs sm:text-sm text-[#777D78] font-medium mt-1">
-            Sign in to access your personal blood glucose logs
+            Your glucose. Your health. Your insights.
           </p>
         </div>
 

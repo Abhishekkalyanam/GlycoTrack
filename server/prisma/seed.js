@@ -14,7 +14,7 @@ function formatDateStr(date) {
 }
 
 async function main() {
-  console.log("🌱 Starting Sweety database seed...");
+  console.log("🌱 Starting GlycoTrack database seed...");
 
   // Clean existing data
   await prisma.reading.deleteMany({});

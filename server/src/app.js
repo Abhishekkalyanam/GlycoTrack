@@ -15,7 +15,7 @@ app.use(express.json());
 app.get("/api/health", (req, res) => {
   res.json({
     status: "ok",
-    app: "Sweety – Blood Glucose Tracker",
+    app: "GlycoTrack – Blood Glucose Tracker",
     timestamp: new Date().toISOString(),
   });
 });

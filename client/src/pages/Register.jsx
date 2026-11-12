@@ -43,7 +43,7 @@ export default function Register() {
     setIsLoading(true);
     try {
       await register(name.trim(), email.trim(), password);
-      showSuccess("Welcome to Sweety! Your account has been created.");
+      showSuccess("Welcome to GlycoTrack! Your account has been created.");
       navigate("/");
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed. Please try again.");
@@ -55,7 +55,7 @@ export default function Register() {
   return (
     <div className="min-h-screen bg-[#F7F8F5] flex items-center justify-center p-4">
       <div className="bg-white max-w-md w-full rounded-3xl shadow-xl border border-[#E9ECE7] p-8 sm:p-9">
-        {/* Header with Sweety Pulse Logo */}
+        {/* Header with GlycoTrack Pulse Logo */}
         <div className="text-center mb-8">
           <div className="w-14 h-14 bg-[#101310] text-[#C5F53C] rounded-2xl flex items-center justify-center mx-auto mb-3.5 shadow-lg">
             <Activity className="w-7 h-7 stroke-[2.5]" />
@@ -64,7 +64,10 @@ export default function Register() {
             Create an Account
           </h1>
           <p className="text-xs sm:text-sm text-[#777D78] font-medium mt-1">
-            Start tracking your blood glucose levels with Sweety
+            Start tracking your blood glucose levels with GlycoTrack
+          </p>
+          <p className="text-[11px] text-[#777D78] italic mt-0.5">
+            Your glucose. Your health. Your insights.
           </p>
         </div>
 
