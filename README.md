@@ -54,12 +54,14 @@ Developed for the **Kenpath Junior Full Stack Developer Technical Assessment**.
   - **Month-to-Date Report:** From the 1st of the month to the selected date, calculating peak, trough, rounded average, total count, and a chronological trend curve.
   - **Previous Month Report:** Complete previous calendar month retrospective with daily averages and stats.
   - Friendly empty states for dates or periods with no readings.
-- **Modern Healthcare Dashboard:**
-  - Professional white and light-blue healthcare aesthetic (`#0284c7`, `#f0f9ff`, slate tones).
-  - Responsive desktop sidebar navigation with collapsible mobile drawer.
-  - Key metric cards: Today's reading count (X / 4), Today's average, Today's highest, Today's lowest.
-  - Interactive charts powered by Recharts.
-  - Toast notifications for successes and errors.
+- **Modern Minimal SaaS & Wellness Dashboard:**
+  - Distinctive light-theme aesthetic: Off-white background (`#F7F8F5`), white rounded-3xl cards, and deep black sidebar (`#101310`).
+  - Vibrant neon lime green accents (`#C5F53C`) for active navigation, completion rings, and primary actions.
+  - Spacious 3-column dashboard layout inspired by premium health tracking dashboards.
+  - Prominent black **Glucose Overview Card** with circular completion ring, today's average, and slot pills.
+  - Dedicated right-hand **"My Daily Readings"** panel tracking the 4 meal slots (*Morning*, *After breakfast*, *After lunch*, *After dinner*) with quick inline logging.
+  - Interactive Recharts line & area curves with neon lime gradients and custom dark tooltips.
+  - Dark toast notifications for successes and errors.
 
 ---
 
