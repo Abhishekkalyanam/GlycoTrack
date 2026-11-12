@@ -114,10 +114,11 @@ export default function GlucoseOverviewCard({ dailyStats, readings = [] }) {
             <span className="text-[#C5F53C] font-bold block">
               {count === 4 ? "Goal Complete 🎉" : `${4 - count} slot(s) remaining`}
             </span>
-            <span className="text-[11px] text-[#777D78]">Daily target: 4 slots</span>
+            <span className="text-[11px] text-[#777D78]">Daily maximum: 4 slots</span>
           </div>
         </div>
       </div>
     </div>
   );
 }
+

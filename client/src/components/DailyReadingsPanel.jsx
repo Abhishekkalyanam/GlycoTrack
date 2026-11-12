@@ -6,11 +6,11 @@ import {
   Sun,
   Moon,
   Plus,
-  CheckCircle2,
   Clock,
   Edit2,
   Calendar,
 } from "lucide-react";
+import { getGlucoseIndicator } from "../utils/thresholds";
 
 const SLOTS_CONFIG = [
   {
@@ -18,28 +18,28 @@ const SLOTS_CONFIG = [
     label: "Morning (fasting)",
     shortLabel: "Fasting",
     icon: Sunrise,
-    target: "Target: 70–100 mg/dl",
+    timing: "Fasting measurement",
   },
   {
     key: "After breakfast",
     label: "After breakfast",
-    shortLabel: "Post-Breakfast",
+    shortLabel: "Breakfast",
     icon: Coffee,
-    target: "Target: < 140 mg/dl",
+    timing: "Post-breakfast slot",
   },
   {
     key: "After lunch",
     label: "After lunch",
-    shortLabel: "Post-Lunch",
+    shortLabel: "Lunch",
     icon: Sun,
-    target: "Target: < 140 mg/dl",
+    timing: "Post-lunch slot",
   },
   {
     key: "After dinner",
     label: "After dinner",
-    shortLabel: "Post-Dinner",
+    shortLabel: "Dinner",
     icon: Moon,
-    target: "Target: < 140 mg/dl",
+    timing: "Post-dinner slot",
   },
 ];
 
@@ -52,28 +52,6 @@ export default function DailyReadingsPanel({
   (todayReadings || []).forEach((r) => {
     readingsMap[r.timeSlot] = r;
   });
-
-  const getStatusBadge = (val) => {
-    if (val < 70) {
-      return (
-        <span className="px-2 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-wider bg-[#F15B52]/10 text-[#F15B52] border border-[#F15B52]/20">
-          Low
-        </span>
-      );
-    }
-    if (val > 140) {
-      return (
-        <span className="px-2 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-wider bg-[#FF963D]/10 text-[#FF963D] border border-[#FF963D]/20">
-          Elevated
-        </span>
-      );
-    }
-    return (
-      <span className="px-2 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-wider bg-[#C5F53C]/30 text-[#101310] border border-[#C5F53C]/40">
-        Normal
-      </span>
-    );
-  };
 
   const loggedCount = Object.keys(readingsMap).length;
 
@@ -92,7 +70,7 @@ export default function DailyReadingsPanel({
         </div>
 
         <span className="px-3 py-1 rounded-xl text-xs font-bold bg-[#101310] text-[#C5F53C]">
-          {loggedCount} / 4 Done
+          {loggedCount} / 4 Recorded
         </span>
       </div>
 
@@ -101,6 +79,7 @@ export default function DailyReadingsPanel({
         {SLOTS_CONFIG.map((cfg) => {
           const Icon = cfg.icon;
           const reading = readingsMap[cfg.key];
+          const indicator = reading ? getGlucoseIndicator(reading.value) : null;
 
           return (
             <div
@@ -129,7 +108,7 @@ export default function DailyReadingsPanel({
                       {cfg.label}
                     </h3>
                     <p className="text-[11px] text-[#777D78] mt-0.5 font-medium">
-                      {cfg.target}
+                      {cfg.timing}
                     </p>
                   </div>
                 </div>
@@ -140,6 +119,7 @@ export default function DailyReadingsPanel({
                     onClick={() => onEditReading(reading)}
                     className="p-1.5 text-[#777D78] hover:text-[#171917] hover:bg-white rounded-lg transition"
                     title="Edit reading"
+                    aria-label={`Edit ${cfg.label} reading`}
                   >
                     <Edit2 className="w-3.5 h-3.5" />
                   </button>
@@ -165,7 +145,14 @@ export default function DailyReadingsPanel({
                           minute: "2-digit",
                         })}
                       </span>
-                      {getStatusBadge(reading.value)}
+                      {indicator && (
+                        <span
+                          className={`px-2 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-wider ${indicator.badgeClass}`}
+                          title={indicator.description}
+                        >
+                          {indicator.label}
+                        </span>
+                      )}
                     </div>
                   </>
                 ) : (

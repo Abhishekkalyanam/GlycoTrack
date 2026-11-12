@@ -3,6 +3,7 @@ import api from "../services/api";
 import { useNotification } from "../context/NotificationContext";
 import StatCard from "../components/StatCard";
 import EmptyState from "../components/EmptyState";
+import { getGlucoseIndicator, GLUCOSE_THRESHOLDS } from "../utils/thresholds";
 import {
   FileText,
   Calendar,
@@ -55,8 +56,8 @@ export default function DailyReport() {
   }));
 
   const getBarColor = (val) => {
-    if (val < 70) return "#F15B52"; // red
-    if (val > 140) return "#FF963D"; // orange
+    if (val < GLUCOSE_THRESHOLDS.low) return "#F15B52"; // red
+    if (val > GLUCOSE_THRESHOLDS.elevated) return "#FF963D"; // orange
     return "#C5F53C"; // neon lime
   };
 
@@ -179,13 +180,13 @@ export default function DailyReport() {
                 </div>
                 <div className="flex items-center gap-3 text-xs text-[#777D78] font-bold">
                   <span className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#C5F53C] border border-[#101310]" /> Normal
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#C5F53C] border border-[#101310]" /> Standard ({GLUCOSE_THRESHOLDS.low}–{GLUCOSE_THRESHOLDS.elevated})
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#FF963D]" /> Elevated (&gt;140)
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#FF963D]" /> Elevated (&gt;{GLUCOSE_THRESHOLDS.elevated})
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#F15B52]" /> Low (&lt;70)
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#F15B52]" /> Low (&lt;{GLUCOSE_THRESHOLDS.low})
                   </span>
                 </div>
               </div>
@@ -236,48 +237,44 @@ export default function DailyReport() {
                   <tr className="border-b border-[#E9ECE7] bg-[#F7F8F5]/60 text-[11px] font-black uppercase tracking-wider text-[#777D78]">
                     <th className="py-4 px-6">Time Slot</th>
                     <th className="py-4 px-6">Glucose Reading</th>
-                    <th className="py-4 px-6">Glycemic Range</th>
+                    <th className="py-4 px-6">Reference Indicator</th>
                     <th className="py-4 px-6">Logged At</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#E9ECE7]/60 text-sm">
-                  {report.readings.map((reading) => (
-                    <tr key={reading.id} className="hover:bg-[#F7F8F5]/60 transition-colors">
-                      <td className="py-4 px-6 text-[#171917] font-bold flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-[#777D78]" />
-                        <span>{reading.timeSlot}</span>
-                      </td>
-                      <td className="py-4 px-6">
-                        <span className="font-black text-base text-[#171917]">
-                          {reading.value}
-                        </span>{" "}
-                        <span className="text-xs text-[#777D78] font-bold">mg/dl</span>
-                      </td>
-                      <td className="py-4 px-6">
-                        {reading.value < 70 && (
-                          <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#F15B52]/10 text-[#F15B52] border border-[#F15B52]/20">
-                            Low (&lt; 70)
-                          </span>
-                        )}
-                        {reading.value >= 70 && reading.value <= 140 && (
-                          <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#C5F53C]/30 text-[#101310] border border-[#C5F53C]/40">
-                            Normal (70–140)
-                          </span>
-                        )}
-                        {reading.value > 140 && (
-                          <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#FF963D]/10 text-[#FF963D] border border-[#FF963D]/20">
-                            Elevated (&gt; 140)
-                          </span>
-                        )}
-                      </td>
-                      <td className="py-4 px-6 text-xs text-[#777D78] font-medium">
-                        {new Date(reading.createdAt).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </td>
-                    </tr>
-                  ))}
+                  {report.readings.map((reading) => {
+                    const indicator = getGlucoseIndicator(reading.value);
+                    return (
+                      <tr key={reading.id} className="hover:bg-[#F7F8F5]/60 transition-colors">
+                        <td className="py-4 px-6 text-[#171917] font-bold flex items-center gap-2">
+                          <Clock className="w-4 h-4 text-[#777D78]" />
+                          <span>{reading.timeSlot}</span>
+                        </td>
+                        <td className="py-4 px-6">
+                          <span className="font-black text-base text-[#171917]">
+                            {reading.value}
+                          </span>{" "}
+                          <span className="text-xs text-[#777D78] font-bold">mg/dl</span>
+                        </td>
+                        <td className="py-4 px-6">
+                          {indicator && (
+                            <span
+                              className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${indicator.badgeClass}`}
+                              title={indicator.description}
+                            >
+                              {indicator.label}
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-4 px-6 text-xs text-[#777D78] font-medium">
+                          {new Date(reading.createdAt).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

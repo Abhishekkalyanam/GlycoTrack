@@ -3,6 +3,7 @@ import api from "../services/api";
 import { useNotification } from "../context/NotificationContext";
 import StatCard from "../components/StatCard";
 import EmptyState from "../components/EmptyState";
+import { getGlucoseIndicator } from "../utils/thresholds";
 import {
   TrendingUp,
   Calendar,
@@ -250,47 +251,43 @@ export default function MonthToDateReport() {
                     <th className="py-4 px-6">Date</th>
                     <th className="py-4 px-6">Time Slot</th>
                     <th className="py-4 px-6">Glucose Value</th>
-                    <th className="py-4 px-6">Evaluation</th>
+                    <th className="py-4 px-6">Reference Indicator</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#E9ECE7]/60 text-sm">
-                  {report.readings.map((reading) => (
-                    <tr key={reading.id} className="hover:bg-[#F7F8F5]/60 transition-colors">
-                      <td className="py-4 px-6 font-bold text-[#171917] flex items-center gap-2">
-                        <Calendar className="w-4 h-4 text-[#777D78]" />
-                        <span>{reading.date}</span>
-                      </td>
-                      <td className="py-4 px-6 text-[#171917] font-medium">
-                        <span className="inline-flex items-center gap-1.5">
-                          <Clock className="w-3.5 h-3.5 text-[#777D78]" />
-                          {reading.timeSlot}
-                        </span>
-                      </td>
-                      <td className="py-4 px-6">
-                        <span className="font-black text-base text-[#171917]">
-                          {reading.value}
-                        </span>{" "}
-                        <span className="text-xs text-[#777D78] font-bold">mg/dl</span>
-                      </td>
-                      <td className="py-4 px-6">
-                        {reading.value < 70 && (
-                          <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#F15B52]/10 text-[#F15B52] border border-[#F15B52]/20">
-                            Low (&lt; 70)
+                  {report.readings.map((reading) => {
+                    const indicator = getGlucoseIndicator(reading.value);
+                    return (
+                      <tr key={reading.id} className="hover:bg-[#F7F8F5]/60 transition-colors">
+                        <td className="py-4 px-6 font-bold text-[#171917] flex items-center gap-2">
+                          <Calendar className="w-4 h-4 text-[#777D78]" />
+                          <span>{reading.date}</span>
+                        </td>
+                        <td className="py-4 px-6 text-[#171917] font-medium">
+                          <span className="inline-flex items-center gap-1.5">
+                            <Clock className="w-3.5 h-3.5 text-[#777D78]" />
+                            {reading.timeSlot}
                           </span>
-                        )}
-                        {reading.value >= 70 && reading.value <= 140 && (
-                          <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#C5F53C]/30 text-[#101310] border border-[#C5F53C]/40">
-                            Normal (70–140)
-                          </span>
-                        )}
-                        {reading.value > 140 && (
-                          <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#FF963D]/10 text-[#FF963D] border border-[#FF963D]/20">
-                            Elevated (&gt; 140)
-                          </span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                        <td className="py-4 px-6">
+                          <span className="font-black text-base text-[#171917]">
+                            {reading.value}
+                          </span>{" "}
+                          <span className="text-xs text-[#777D78] font-bold">mg/dl</span>
+                        </td>
+                        <td className="py-4 px-6">
+                          {indicator && (
+                            <span
+                              className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${indicator.badgeClass}`}
+                              title={indicator.description}
+                            >
+                              {indicator.label}
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

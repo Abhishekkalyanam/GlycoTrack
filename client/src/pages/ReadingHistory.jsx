@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import api from "../services/api";
 import { useNotification } from "../context/NotificationContext";
 import ConfirmModal from "../components/ConfirmModal";
@@ -14,19 +14,31 @@ import {
   Edit2,
   Trash2,
   RefreshCw,
+  Search,
 } from "lucide-react";
+import { getGlucoseIndicator } from "../utils/thresholds";
 
 export default function ReadingHistory() {
   const { showSuccess, showError } = useNotification();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const queryTerm = searchParams.get("q") || "";
 
   const [readings, setReadings] = useState([]);
   const [filterDate, setFilterDate] = useState("");
+  const [searchTerm, setSearchTerm] = useState(queryTerm);
   const [isLoading, setIsLoading] = useState(true);
 
   // Modal states
   const [deleteModalState, setDeleteModalState] = useState({ isOpen: false, reading: null });
   const [editModalState, setEditModalState] = useState({ isOpen: false, reading: null });
   const [isProcessing, setIsProcessing] = useState(false);
+
+  useEffect(() => {
+    if (queryTerm) {
+      setSearchTerm(queryTerm);
+    }
+  }, [queryTerm]);
 
   const fetchReadings = useCallback(async () => {
     setIsLoading(true);
@@ -44,6 +56,17 @@ export default function ReadingHistory() {
   useEffect(() => {
     fetchReadings();
   }, [fetchReadings]);
+
+  // Apply search filtering
+  const filteredReadings = readings.filter((r) => {
+    if (!searchTerm.trim()) return true;
+    const term = searchTerm.toLowerCase().trim();
+    return (
+      r.timeSlot.toLowerCase().includes(term) ||
+      r.date.toLowerCase().includes(term) ||
+      String(r.value).includes(term)
+    );
+  });
 
   // Handle Delete Confirm
   const handleDeleteConfirm = async () => {
@@ -77,26 +100,10 @@ export default function ReadingHistory() {
     }
   };
 
-  const getStatusBadge = (val) => {
-    if (val < 70) {
-      return (
-        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#F15B52]/10 text-[#F15B52] border border-[#F15B52]/20">
-          Low (&lt;70)
-        </span>
-      );
-    }
-    if (val > 140) {
-      return (
-        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#FF963D]/10 text-[#FF963D] border border-[#FF963D]/20">
-          Elevated (&gt;140)
-        </span>
-      );
-    }
-    return (
-      <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#C5F53C]/30 text-[#101310] border border-[#C5F53C]/40">
-        Normal (70–140)
-      </span>
-    );
+  const handleClearFilters = () => {
+    setFilterDate("");
+    setSearchTerm("");
+    setSearchParams({});
   };
 
   return (
@@ -109,7 +116,7 @@ export default function ReadingHistory() {
             <span>Reading History</span>
           </h1>
           <p className="text-xs sm:text-sm text-[#777D78] font-medium mt-0.5">
-            Comprehensive log of all blood glucose measurements with date filtering
+            Comprehensive log of all blood glucose measurements with date & keyword filtering
           </p>
         </div>
 
@@ -122,33 +129,55 @@ export default function ReadingHistory() {
         </Link>
       </div>
 
-      {/* Filter Toolbar */}
-      <div className="bg-white rounded-3xl border border-[#E9ECE7] p-5 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-3 w-full sm:w-auto">
-          <div className="flex items-center gap-2 text-xs font-bold text-[#171917] uppercase tracking-wider">
-            <Filter className="w-4 h-4 text-[#101310]" />
-            <span>Filter Date:</span>
+      {/* Filter & Search Toolbar */}
+      <div className="bg-white rounded-3xl border border-[#E9ECE7] p-5 shadow-xs flex flex-col lg:flex-row items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+          {/* Date Filter */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold text-[#171917] uppercase tracking-wider flex items-center gap-1.5">
+              <Filter className="w-3.5 h-3.5 text-[#101310]" />
+              Date:
+            </span>
+            <input
+              type="date"
+              value={filterDate}
+              onChange={(e) => setFilterDate(e.target.value)}
+              className="px-3.5 py-2 bg-[#F7F8F5] border border-[#E9ECE7] rounded-xl text-[#171917] font-semibold text-xs sm:text-sm focus:outline-none focus:border-[#C5F53C] focus:ring-2 focus:ring-[#C5F53C]/20 transition cursor-pointer"
+            />
           </div>
-          <input
-            type="date"
-            value={filterDate}
-            onChange={(e) => setFilterDate(e.target.value)}
-            className="px-3.5 py-2 bg-[#F7F8F5] border border-[#E9ECE7] rounded-xl text-[#171917] font-semibold text-xs sm:text-sm focus:outline-none focus:border-[#C5F53C] focus:ring-2 focus:ring-[#C5F53C]/20 transition cursor-pointer"
-          />
-          {filterDate && (
+
+          {/* Keyword Search Filter */}
+          <div className="relative flex-1 sm:flex-initial">
+            <Search className="w-3.5 h-3.5 text-[#777D78] absolute left-3 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              placeholder="Search slot or value..."
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                if (e.target.value) {
+                  setSearchParams({ q: e.target.value });
+                } else {
+                  setSearchParams({});
+                }
+              }}
+              className="pl-8 pr-3 py-2 bg-[#F7F8F5] border border-[#E9ECE7] rounded-xl text-[#171917] font-semibold text-xs sm:text-sm placeholder-[#777D78] focus:outline-none focus:border-[#C5F53C] focus:ring-2 focus:ring-[#C5F53C]/20 transition w-full sm:w-48"
+            />
+          </div>
+
+          {(filterDate || searchTerm) && (
             <button
-              onClick={() => setFilterDate("")}
+              onClick={handleClearFilters}
               className="inline-flex items-center gap-1 px-3 py-2 text-xs font-bold text-[#777D78] hover:text-[#171917] bg-[#F7F8F5] hover:bg-slate-200/60 rounded-xl transition"
             >
               <X className="w-3.5 h-3.5" />
-              <span>Clear</span>
+              <span>Clear Filters</span>
             </button>
           )}
         </div>
 
-        <div className="text-xs text-[#777D78] font-medium self-end sm:self-center">
-          Showing <strong className="text-[#171917] font-black">{readings.length}</strong> entry(ies)
-          {filterDate ? ` on ${filterDate}` : " (all time)"}
+        <div className="text-xs text-[#777D78] font-medium self-end lg:self-center">
+          Showing <strong className="text-[#171917] font-black">{filteredReadings.length}</strong> of {readings.length} entry(ies)
         </div>
       </div>
 
@@ -159,12 +188,16 @@ export default function ReadingHistory() {
             <RefreshCw className="w-8 h-8 text-[#101310] animate-spin" />
             <span className="text-sm font-bold">Loading measurement history...</span>
           </div>
-        ) : readings.length === 0 ? (
+        ) : filteredReadings.length === 0 ? (
           <EmptyState
-            title={filterDate ? `No measurements on ${filterDate}` : "No readings recorded yet"}
+            title={
+              filterDate || searchTerm
+                ? "No measurements match your filters"
+                : "No readings recorded yet"
+            }
             description={
-              filterDate
-                ? "No entries match this date. Choose another date or add a new reading."
+              filterDate || searchTerm
+                ? "Try adjusting your date or search keywords to view logged measurements."
                 : "Your personal log is empty. Click below to add your first reading."
             }
             actionText="Add Reading"
@@ -178,48 +211,62 @@ export default function ReadingHistory() {
                   <th className="py-4 px-6">Date</th>
                   <th className="py-4 px-6">Time Slot</th>
                   <th className="py-4 px-6">Glucose Level</th>
-                  <th className="py-4 px-6">Status Indicator</th>
+                  <th className="py-4 px-6">Informational Reference</th>
                   <th className="py-4 px-6 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#E9ECE7]/60 text-sm">
-                {readings.map((reading) => (
-                  <tr key={reading.id} className="hover:bg-[#F7F8F5]/60 transition-colors">
-                    <td className="py-4 px-6 font-bold text-[#171917] flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-[#777D78]" />
-                      <span>{reading.date}</span>
-                    </td>
-                    <td className="py-4 px-6 text-[#171917] font-medium">
-                      <span className="inline-flex items-center gap-1.5">
-                        <Clock className="w-3.5 h-3.5 text-[#777D78]" />
-                        {reading.timeSlot}
-                      </span>
-                    </td>
-                    <td className="py-4 px-6">
-                      <span className="font-black text-base text-[#171917]">
-                        {reading.value}
-                      </span>{" "}
-                      <span className="text-xs text-[#777D78] font-bold">mg/dl</span>
-                    </td>
-                    <td className="py-4 px-6">{getStatusBadge(reading.value)}</td>
-                    <td className="py-4 px-6 text-right space-x-1.5">
-                      <button
-                        onClick={() => setEditModalState({ isOpen: true, reading })}
-                        className="p-1.5 text-[#777D78] hover:text-[#171917] hover:bg-[#F7F8F5] rounded-xl transition"
-                        title="Edit Reading"
-                      >
-                        <Edit2 className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => setDeleteModalState({ isOpen: true, reading })}
-                        className="p-1.5 text-[#777D78] hover:text-[#F15B52] hover:bg-[#F15B52]/10 rounded-xl transition"
-                        title="Delete Reading"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {filteredReadings.map((reading) => {
+                  const indicator = getGlucoseIndicator(reading.value);
+                  return (
+                    <tr key={reading.id} className="hover:bg-[#F7F8F5]/60 transition-colors">
+                      <td className="py-4 px-6 font-bold text-[#171917] flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-[#777D78]" />
+                        <span>{reading.date}</span>
+                      </td>
+                      <td className="py-4 px-6 text-[#171917] font-medium">
+                        <span className="inline-flex items-center gap-1.5">
+                          <Clock className="w-3.5 h-3.5 text-[#777D78]" />
+                          {reading.timeSlot}
+                        </span>
+                      </td>
+                      <td className="py-4 px-6">
+                        <span className="font-black text-base text-[#171917]">
+                          {reading.value}
+                        </span>{" "}
+                        <span className="text-xs text-[#777D78] font-bold">mg/dl</span>
+                      </td>
+                      <td className="py-4 px-6">
+                        {indicator && (
+                          <span
+                            className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${indicator.badgeClass}`}
+                            title={indicator.description}
+                          >
+                            {indicator.label}
+                          </span>
+                        )}
+                      </td>
+                      <td className="py-4 px-6 text-right space-x-1.5">
+                        <button
+                          onClick={() => setEditModalState({ isOpen: true, reading })}
+                          className="p-1.5 text-[#777D78] hover:text-[#171917] hover:bg-[#F7F8F5] rounded-xl transition"
+                          title="Edit Reading"
+                          aria-label={`Edit reading on ${reading.date} ${reading.timeSlot}`}
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => setDeleteModalState({ isOpen: true, reading })}
+                          className="p-1.5 text-[#777D78] hover:text-[#F15B52] hover:bg-[#F15B52]/10 rounded-xl transition"
+                          title="Delete Reading"
+                          aria-label={`Delete reading on ${reading.date} ${reading.timeSlot}`}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
