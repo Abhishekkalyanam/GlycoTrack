@@ -55,9 +55,27 @@ export default function DailyReport() {
   }));
 
   const getBarColor = (val) => {
-    if (val < 70) return "#f59e0b"; // amber
-    if (val > 140) return "#f43f5e"; // rose
-    return "#0ea5e9"; // sky
+    if (val < 70) return "#F15B52"; // red
+    if (val > 140) return "#FF963D"; // orange
+    return "#C5F53C"; // neon lime
+  };
+
+  const CustomTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <div className="bg-[#101310] text-white p-3 rounded-2xl shadow-xl border border-white/10 text-xs">
+          <p className="text-[#777D78] font-bold uppercase tracking-wider text-[10px]">
+            {data.slot}
+          </p>
+          <div className="flex items-baseline gap-1.5 mt-1">
+            <span className="text-lg font-black text-[#C5F53C]">{data.value}</span>
+            <span className="text-xs text-white/80">mg/dl</span>
+          </div>
+        </div>
+      );
+    }
+    return null;
   };
 
   return (
@@ -65,31 +83,31 @@ export default function DailyReport() {
       {/* Header & Date Picker */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2.5">
-            <FileText className="w-6 h-6 text-sky-600" />
+          <h1 className="text-2xl font-black text-[#171917] tracking-tight flex items-center gap-2.5">
+            <FileText className="w-6 h-6 text-[#101310]" />
             <span>Daily Glucose Report</span>
           </h1>
-          <p className="text-sm text-slate-500 mt-0.5">
-            Detailed breakdown and statistics for a single calendar day
+          <p className="text-xs sm:text-sm text-[#777D78] font-medium mt-0.5">
+            Comprehensive breakdown of glycemic levels for a single calendar day
           </p>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-white px-3.5 py-2 rounded-2xl border border-slate-200 shadow-xs">
-            <Calendar className="w-4 h-4 text-sky-600" />
+          <div className="flex items-center gap-2 bg-white px-4 py-2.5 rounded-2xl border border-[#E9ECE7] shadow-xs">
+            <Calendar className="w-4 h-4 text-[#101310]" />
             <input
               type="date"
               max={todayStr}
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              className="text-xs sm:text-sm font-semibold text-slate-800 bg-transparent focus:outline-none cursor-pointer"
+              className="text-xs sm:text-sm font-bold text-[#171917] bg-transparent focus:outline-none cursor-pointer"
             />
           </div>
 
           <button
             onClick={fetchReport}
             disabled={isLoading}
-            className="p-2.5 bg-white text-slate-600 hover:text-sky-600 border border-slate-200 rounded-2xl shadow-xs transition"
+            className="p-2.5 bg-white text-[#777D78] hover:text-[#171917] border border-[#E9ECE7] rounded-2xl shadow-xs transition"
             title="Refresh Report"
           >
             <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
@@ -98,9 +116,9 @@ export default function DailyReport() {
       </div>
 
       {isLoading ? (
-        <div className="bg-white rounded-3xl border border-slate-100 p-16 text-center text-slate-500 flex flex-col items-center justify-center gap-3 shadow-sm">
-          <RefreshCw className="w-8 h-8 text-sky-600 animate-spin" />
-          <span className="text-sm font-semibold">Generating daily report...</span>
+        <div className="bg-white rounded-3xl border border-[#E9ECE7] p-16 text-center text-[#777D78] flex flex-col items-center justify-center gap-3 shadow-xs">
+          <RefreshCw className="w-8 h-8 text-[#101310] animate-spin" />
+          <span className="text-sm font-bold">Compiling daily metrics...</span>
         </div>
       ) : report?.totalReadings === 0 ? (
         <EmptyState
@@ -112,89 +130,85 @@ export default function DailyReport() {
       ) : (
         <>
           {/* Stat Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <StatCard
               title="Total Readings"
               value={`${report.totalReadings} / 4`}
               subtitle={`Recorded on ${report.date}`}
               icon={CheckCircle2}
-              color="sky"
+              accentColor="lime"
             />
 
             <StatCard
               title="Average Glucose"
               value={report.average}
               unit="mg/dl"
-              subtitle="Daily rounded average (1 dec)"
+              subtitle="Rounded average (1 dec)"
               icon={TrendingUp}
-              color="indigo"
+              accentColor="blue"
             />
 
             <StatCard
               title="Highest Reading"
               value={report.highest}
               unit="mg/dl"
-              subtitle="Peak glucose of the day"
+              subtitle="Daily peak value"
               icon={ArrowUpRight}
-              color="rose"
+              accentColor="orange"
             />
 
             <StatCard
               title="Lowest Reading"
               value={report.lowest}
               unit="mg/dl"
-              subtitle="Trough glucose of the day"
+              subtitle="Daily trough value"
               icon={ArrowDownRight}
-              color="emerald"
+              accentColor="red"
             />
           </div>
 
           {/* Slot Breakdown Bar Chart */}
           {chartData.length > 0 && (
-            <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm">
-              <div className="flex items-center justify-between mb-4">
+            <div className="bg-white rounded-3xl p-6 sm:p-7 border border-[#E9ECE7] shadow-xs">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
                 <div className="flex items-center gap-2">
-                  <BarChart2 className="w-5 h-5 text-sky-600" />
-                  <h3 className="text-base font-bold text-slate-900">
+                  <BarChart2 className="w-5 h-5 text-[#101310]" />
+                  <h3 className="text-base sm:text-lg font-extrabold text-[#171917]">
                     Time Slot Comparison ({report.date})
                   </h3>
                 </div>
-                <div className="flex items-center gap-3 text-xs text-slate-500">
-                  <span className="flex items-center gap-1">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Normal
+                <div className="flex items-center gap-3 text-xs text-[#777D78] font-bold">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#C5F53C] border border-[#101310]" /> Normal
                   </span>
-                  <span className="flex items-center gap-1">
-                    <span className="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Elevated (&gt;140)
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#FF963D]" /> Elevated (&gt;140)
                   </span>
-                  <span className="flex items-center gap-1">
-                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Low (&lt;70)
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#F15B52]" /> Low (&lt;70)
                   </span>
                 </div>
               </div>
 
-              <div className="h-64 w-full">
+              <div className="h-64 sm:h-72 w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={chartData} margin={{ top: 20, right: 20, left: -10, bottom: 20 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                  <BarChart data={chartData} margin={{ top: 20, right: 10, left: -15, bottom: 20 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#F0F2ED" vertical={false} />
                     <XAxis
                       dataKey="slot"
-                      tick={{ fontSize: 11, fill: "#64748b" }}
+                      tick={{ fontSize: 11, fill: "#777D78", fontWeight: 600 }}
                       interval={0}
-                      angle={-10}
-                      textAnchor="end"
+                      axisLine={{ stroke: "#E9ECE7" }}
+                      tickLine={false}
                     />
-                    <YAxis domain={[40, "auto"]} tick={{ fontSize: 11, fill: "#64748b" }} />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "#ffffff",
-                        borderRadius: "12px",
-                        border: "1px solid #e2e8f0",
-                        boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05)",
-                        fontSize: "12px",
-                      }}
-                      formatter={(val) => [`${val} mg/dl`, "Glucose Level"]}
+                    <YAxis
+                      domain={[40, "auto"]}
+                      tick={{ fontSize: 11, fill: "#777D78", fontWeight: 600 }}
+                      axisLine={false}
+                      tickLine={false}
                     />
-                    <Bar dataKey="value" radius={[8, 8, 0, 0]} barSize={40}>
+                    <Tooltip content={<CustomTooltip />} />
+                    <Bar dataKey="value" radius={[10, 10, 0, 0]} barSize={44}>
                       {chartData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={getBarColor(entry.value)} />
                       ))}
@@ -206,55 +220,57 @@ export default function DailyReport() {
           )}
 
           {/* Detailed Readings List */}
-          <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-slate-100">
-              <h3 className="text-lg font-bold text-slate-900">Recorded Readings</h3>
-              <p className="text-xs text-slate-500">
-                All measurements recorded for {report.date}
+          <div className="bg-white rounded-3xl border border-[#E9ECE7] shadow-xs overflow-hidden">
+            <div className="p-6 border-b border-[#E9ECE7]">
+              <h3 className="text-base sm:text-lg font-extrabold text-[#171917]">
+                Recorded Readings
+              </h3>
+              <p className="text-xs text-[#777D78] font-medium mt-0.5">
+                Measurements logged on {report.date}
               </p>
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-slate-50/70 border-b border-slate-100 text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                    <th className="py-3.5 px-6">Time Slot</th>
-                    <th className="py-3.5 px-6">Glucose Reading</th>
-                    <th className="py-3.5 px-6">Target Evaluation</th>
-                    <th className="py-3.5 px-6">Logged At</th>
+                  <tr className="border-b border-[#E9ECE7] bg-[#F7F8F5]/60 text-[11px] font-black uppercase tracking-wider text-[#777D78]">
+                    <th className="py-4 px-6">Time Slot</th>
+                    <th className="py-4 px-6">Glucose Reading</th>
+                    <th className="py-4 px-6">Glycemic Range</th>
+                    <th className="py-4 px-6">Logged At</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-sm">
+                <tbody className="divide-y divide-[#E9ECE7]/60 text-sm">
                   {report.readings.map((reading) => (
-                    <tr key={reading.id} className="hover:bg-slate-50/60 transition">
-                      <td className="py-4 px-6 text-slate-800 font-semibold flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-sky-600" />
+                    <tr key={reading.id} className="hover:bg-[#F7F8F5]/60 transition-colors">
+                      <td className="py-4 px-6 text-[#171917] font-bold flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-[#777D78]" />
                         <span>{reading.timeSlot}</span>
                       </td>
                       <td className="py-4 px-6">
-                        <span className="font-extrabold text-base text-slate-900">
+                        <span className="font-black text-base text-[#171917]">
                           {reading.value}
                         </span>{" "}
-                        <span className="text-xs text-slate-500 font-medium">mg/dl</span>
+                        <span className="text-xs text-[#777D78] font-bold">mg/dl</span>
                       </td>
                       <td className="py-4 px-6">
                         {reading.value < 70 && (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                          <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#F15B52]/10 text-[#F15B52] border border-[#F15B52]/20">
                             Low (&lt; 70)
                           </span>
                         )}
                         {reading.value >= 70 && reading.value <= 140 && (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                            Normal (70-140)
+                          <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#C5F53C]/30 text-[#101310] border border-[#C5F53C]/40">
+                            Normal (70–140)
                           </span>
                         )}
                         {reading.value > 140 && (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+                          <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#FF963D]/10 text-[#FF963D] border border-[#FF963D]/20">
                             Elevated (&gt; 140)
                           </span>
                         )}
                       </td>
-                      <td className="py-4 px-6 text-xs text-slate-500">
+                      <td className="py-4 px-6 text-xs text-[#777D78] font-medium">
                         {new Date(reading.createdAt).toLocaleTimeString([], {
                           hour: "2-digit",
                           minute: "2-digit",
@@ -271,4 +287,3 @@ export default function DailyReport() {
     </div>
   );
 }
-

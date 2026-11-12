@@ -1,64 +1,72 @@
 import React from "react";
 
-export default function StatCard({ title, value, unit, icon: Icon, color = "sky", subtitle }) {
-  const colorStyles = {
-    sky: {
-      bg: "bg-sky-50",
-      text: "text-sky-600",
-      border: "border-sky-100",
+export default function StatCard({
+  title,
+  value,
+  unit,
+  icon: Icon,
+  accentColor = "lime",
+  subtitle,
+}) {
+  const accentStyles = {
+    lime: {
+      bg: "bg-[#C5F53C]/20",
+      text: "text-[#101310]",
+      border: "border-[#C5F53C]/30",
+      pill: "bg-[#C5F53C]/15 text-[#101310]",
     },
-    emerald: {
-      bg: "bg-emerald-50",
-      text: "text-emerald-600",
-      border: "border-emerald-100",
+    blue: {
+      bg: "bg-[#3789F5]/10",
+      text: "text-[#3789F5]",
+      border: "border-[#3789F5]/20",
+      pill: "bg-[#3789F5]/10 text-[#3789F5]",
     },
-    amber: {
-      bg: "bg-amber-50",
-      text: "text-amber-600",
-      border: "border-amber-100",
+    orange: {
+      bg: "bg-[#FF963D]/10",
+      text: "text-[#FF963D]",
+      border: "border-[#FF963D]/20",
+      pill: "bg-[#FF963D]/10 text-[#FF963D]",
     },
-    rose: {
-      bg: "bg-rose-50",
-      text: "text-rose-600",
-      border: "border-rose-100",
+    red: {
+      bg: "bg-[#F15B52]/10",
+      text: "text-[#F15B52]",
+      border: "border-[#F15B52]/20",
+      pill: "bg-[#F15B52]/10 text-[#F15B52]",
     },
-    indigo: {
-      bg: "bg-indigo-50",
-      text: "text-indigo-600",
-      border: "border-indigo-100",
-    },
-  }[color] || {
-    bg: "bg-sky-50",
-    text: "text-sky-600",
-    border: "border-sky-100",
+  }[accentColor] || {
+    bg: "bg-[#C5F53C]/20",
+    text: "text-[#101310]",
+    border: "border-[#C5F53C]/30",
+    pill: "bg-[#C5F53C]/15 text-[#101310]",
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm hover:shadow-md transition-shadow">
-      <div className="flex items-center justify-between mb-4">
-        <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+    <div className="bg-white rounded-3xl p-6 border border-[#E9ECE7] shadow-xs hover:border-[#C5F53C]/50 hover:shadow-md transition-all duration-200">
+      <div className="flex items-center justify-between mb-3">
+        <span className="text-xs font-bold uppercase tracking-wider text-[#777D78]">
           {title}
         </span>
         {Icon && (
-          <div className={`p-2.5 rounded-xl ${colorStyles.bg} ${colorStyles.text}`}>
-            <Icon className="w-5 h-5" />
+          <div className={`w-10 h-10 rounded-2xl flex items-center justify-center ${accentStyles.bg} ${accentStyles.text}`}>
+            <Icon className="w-5 h-5 stroke-[2.2]" />
           </div>
         )}
       </div>
 
-      <div className="flex items-baseline gap-2">
-        <span className="text-3xl font-bold tracking-tight text-slate-900">
+      <div className="flex items-baseline gap-2 mt-1">
+        <span className="text-3xl sm:text-4xl font-black tracking-tight text-[#171917]">
           {value !== null && value !== undefined ? value : "—"}
         </span>
         {unit && value !== null && value !== undefined && (
-          <span className="text-sm font-medium text-slate-500">{unit}</span>
+          <span className="text-xs font-bold text-[#777D78] uppercase">{unit}</span>
         )}
       </div>
 
       {subtitle && (
-        <p className="mt-2 text-xs text-slate-500">{subtitle}</p>
+        <div className="mt-3 pt-3 border-t border-[#E9ECE7]/60 flex items-center justify-between">
+          <p className="text-xs text-[#777D78] font-medium">{subtitle}</p>
+        </div>
       )}
     </div>
   );
 }
-

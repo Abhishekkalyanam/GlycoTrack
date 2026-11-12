@@ -6,16 +6,14 @@ import ConfirmModal from "../components/ConfirmModal";
 import EditReadingModal from "../components/EditReadingModal";
 import EmptyState from "../components/EmptyState";
 import {
-  History,
+  Clock,
   Filter,
   X,
-  PlusCircle,
+  Plus,
   Calendar,
-  Clock,
   Edit2,
   Trash2,
   RefreshCw,
-  Search,
 } from "lucide-react";
 
 export default function ReadingHistory() {
@@ -79,25 +77,24 @@ export default function ReadingHistory() {
     }
   };
 
-  // Glucose Badge
-  const getGlucoseBadge = (val) => {
+  const getStatusBadge = (val) => {
     if (val < 70) {
       return (
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-          Low (&lt; 70)
+        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#F15B52]/10 text-[#F15B52] border border-[#F15B52]/20">
+          Low (&lt;70)
         </span>
       );
     }
     if (val > 140) {
       return (
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
-          Elevated (&gt; 140)
+        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#FF963D]/10 text-[#FF963D] border border-[#FF963D]/20">
+          Elevated (&gt;140)
         </span>
       );
     }
     return (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-        Normal (70-140)
+      <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#C5F53C]/30 text-[#101310] border border-[#C5F53C]/40">
+        Normal (70–140)
       </span>
     );
   };
@@ -107,72 +104,68 @@ export default function ReadingHistory() {
       {/* Header bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2.5">
-            <History className="w-6 h-6 text-sky-600" />
+          <h1 className="text-2xl font-black text-[#171917] tracking-tight flex items-center gap-2.5">
+            <Clock className="w-6 h-6 text-[#101310]" />
             <span>Reading History</span>
           </h1>
-          <p className="text-sm text-slate-500 mt-0.5">
-            View, filter, edit, and manage all your historical blood glucose entries
+          <p className="text-xs sm:text-sm text-[#777D78] font-medium mt-0.5">
+            Comprehensive log of all blood glucose measurements with date filtering
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <Link
-            to="/add-reading"
-            className="inline-flex items-center gap-2 bg-sky-600 hover:bg-sky-700 text-white font-semibold text-sm px-4 py-2.5 rounded-xl shadow-xs transition"
-          >
-            <PlusCircle className="w-4 h-4" />
-            <span>Add Reading</span>
-          </Link>
-        </div>
+        <Link
+          to="/add-reading"
+          className="inline-flex items-center gap-2 bg-[#C5F53C] hover:bg-[#b8eb2f] text-[#101310] font-bold text-sm px-5 py-2.5 rounded-2xl shadow-sm transition self-start sm:self-center"
+        >
+          <Plus className="w-4 h-4 stroke-[3]" />
+          <span>Add Reading</span>
+        </Link>
       </div>
 
       {/* Filter Toolbar */}
-      <div className="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="bg-white rounded-3xl border border-[#E9ECE7] p-5 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3 w-full sm:w-auto">
-          <div className="flex items-center gap-2 text-xs font-bold text-slate-600 uppercase tracking-wider">
-            <Filter className="w-4 h-4 text-sky-600" />
-            <span>Filter by Date:</span>
+          <div className="flex items-center gap-2 text-xs font-bold text-[#171917] uppercase tracking-wider">
+            <Filter className="w-4 h-4 text-[#101310]" />
+            <span>Filter Date:</span>
           </div>
-          <div className="relative flex-1 sm:flex-initial">
-            <input
-              type="date"
-              value={filterDate}
-              onChange={(e) => setFilterDate(e.target.value)}
-              className="px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition w-full sm:w-44"
-            />
-          </div>
+          <input
+            type="date"
+            value={filterDate}
+            onChange={(e) => setFilterDate(e.target.value)}
+            className="px-3.5 py-2 bg-[#F7F8F5] border border-[#E9ECE7] rounded-xl text-[#171917] font-semibold text-xs sm:text-sm focus:outline-none focus:border-[#C5F53C] focus:ring-2 focus:ring-[#C5F53C]/20 transition cursor-pointer"
+          />
           {filterDate && (
             <button
               onClick={() => setFilterDate("")}
-              className="inline-flex items-center gap-1 px-3 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-xl transition"
+              className="inline-flex items-center gap-1 px-3 py-2 text-xs font-bold text-[#777D78] hover:text-[#171917] bg-[#F7F8F5] hover:bg-slate-200/60 rounded-xl transition"
             >
               <X className="w-3.5 h-3.5" />
-              <span>Clear Filter</span>
+              <span>Clear</span>
             </button>
           )}
         </div>
 
-        <div className="text-xs text-slate-500 font-medium self-end sm:self-center">
-          Showing <strong>{readings.length}</strong> reading(s)
-          {filterDate ? ` for ${filterDate}` : " (all time)"}
+        <div className="text-xs text-[#777D78] font-medium self-end sm:self-center">
+          Showing <strong className="text-[#171917] font-black">{readings.length}</strong> entry(ies)
+          {filterDate ? ` on ${filterDate}` : " (all time)"}
         </div>
       </div>
 
-      {/* Readings Table / Cards */}
-      <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+      {/* Table Card */}
+      <div className="bg-white rounded-3xl border border-[#E9ECE7] shadow-xs overflow-hidden">
         {isLoading ? (
-          <div className="p-16 text-center text-slate-500 flex flex-col items-center justify-center gap-3">
-            <RefreshCw className="w-8 h-8 text-sky-600 animate-spin" />
-            <span className="text-sm font-semibold">Loading glucose readings...</span>
+          <div className="p-16 text-center text-[#777D78] flex flex-col items-center justify-center gap-3">
+            <RefreshCw className="w-8 h-8 text-[#101310] animate-spin" />
+            <span className="text-sm font-bold">Loading measurement history...</span>
           </div>
         ) : readings.length === 0 ? (
           <EmptyState
-            title={filterDate ? `No readings found for ${filterDate}` : "No readings recorded yet"}
+            title={filterDate ? `No measurements on ${filterDate}` : "No readings recorded yet"}
             description={
               filterDate
-                ? "There are no glucose measurements logged on this specific date. Try choosing another date or adding a new reading."
-                : "You have not added any glucose measurements yet. Click below to add your first reading."
+                ? "No entries match this date. Choose another date or add a new reading."
+                : "Your personal log is empty. Click below to add your first reading."
             }
             actionText="Add Reading"
             actionLink="/add-reading"
@@ -181,45 +174,45 @@ export default function ReadingHistory() {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-slate-50/70 border-b border-slate-100 text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                  <th className="py-3.5 px-6">Date</th>
-                  <th className="py-3.5 px-6">Time Slot</th>
-                  <th className="py-3.5 px-6">Glucose Level</th>
-                  <th className="py-3.5 px-6">Status Indicator</th>
-                  <th className="py-3.5 px-6 text-right">Actions</th>
+                <tr className="border-b border-[#E9ECE7] bg-[#F7F8F5]/60 text-[11px] font-black uppercase tracking-wider text-[#777D78]">
+                  <th className="py-4 px-6">Date</th>
+                  <th className="py-4 px-6">Time Slot</th>
+                  <th className="py-4 px-6">Glucose Level</th>
+                  <th className="py-4 px-6">Status Indicator</th>
+                  <th className="py-4 px-6 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-sm">
+              <tbody className="divide-y divide-[#E9ECE7]/60 text-sm">
                 {readings.map((reading) => (
-                  <tr key={reading.id} className="hover:bg-slate-50/60 transition">
-                    <td className="py-4 px-6 font-semibold text-slate-900 flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-slate-400" />
+                  <tr key={reading.id} className="hover:bg-[#F7F8F5]/60 transition-colors">
+                    <td className="py-4 px-6 font-bold text-[#171917] flex items-center gap-2">
+                      <Calendar className="w-4 h-4 text-[#777D78]" />
                       <span>{reading.date}</span>
                     </td>
-                    <td className="py-4 px-6 text-slate-700 font-medium">
+                    <td className="py-4 px-6 text-[#171917] font-medium">
                       <span className="inline-flex items-center gap-1.5">
-                        <Clock className="w-3.5 h-3.5 text-sky-600" />
+                        <Clock className="w-3.5 h-3.5 text-[#777D78]" />
                         {reading.timeSlot}
                       </span>
                     </td>
                     <td className="py-4 px-6">
-                      <span className="font-extrabold text-base text-slate-900">
+                      <span className="font-black text-base text-[#171917]">
                         {reading.value}
                       </span>{" "}
-                      <span className="text-xs text-slate-500 font-medium">mg/dl</span>
+                      <span className="text-xs text-[#777D78] font-bold">mg/dl</span>
                     </td>
-                    <td className="py-4 px-6">{getGlucoseBadge(reading.value)}</td>
-                    <td className="py-4 px-6 text-right space-x-2">
+                    <td className="py-4 px-6">{getStatusBadge(reading.value)}</td>
+                    <td className="py-4 px-6 text-right space-x-1.5">
                       <button
                         onClick={() => setEditModalState({ isOpen: true, reading })}
-                        className="p-1.5 text-slate-500 hover:text-sky-600 hover:bg-sky-50 rounded-lg transition"
+                        className="p-1.5 text-[#777D78] hover:text-[#171917] hover:bg-[#F7F8F5] rounded-xl transition"
                         title="Edit Reading"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => setDeleteModalState({ isOpen: true, reading })}
-                        className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition"
+                        className="p-1.5 text-[#777D78] hover:text-[#F15B52] hover:bg-[#F15B52]/10 rounded-xl transition"
                         title="Delete Reading"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -253,4 +246,3 @@ export default function ReadingHistory() {
     </div>
   );
 }
-

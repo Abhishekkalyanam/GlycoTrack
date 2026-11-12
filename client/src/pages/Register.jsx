@@ -53,92 +53,94 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50 flex items-center justify-center p-4">
-      <div className="bg-white max-w-md w-full rounded-3xl shadow-xl shadow-sky-100/50 border border-slate-100 p-8">
-        {/* Header */}
+    <div className="min-h-screen bg-[#F7F8F5] flex items-center justify-center p-4">
+      <div className="bg-white max-w-md w-full rounded-3xl shadow-xl border border-[#E9ECE7] p-8 sm:p-9">
+        {/* Header with Sweety Pulse Logo */}
         <div className="text-center mb-8">
-          <div className="w-14 h-14 bg-gradient-to-tr from-sky-600 to-sky-400 text-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-md shadow-sky-500/25">
-            <Activity className="w-8 h-8" />
+          <div className="w-14 h-14 bg-[#101310] text-[#C5F53C] rounded-2xl flex items-center justify-center mx-auto mb-3.5 shadow-lg">
+            <Activity className="w-7 h-7 stroke-[2.5]" />
           </div>
-          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">Create your account</h1>
-          <p className="text-sm text-slate-500 mt-1">
+          <h1 className="text-2xl sm:text-3xl font-black text-[#171917] tracking-tight">
+            Create an Account
+          </h1>
+          <p className="text-xs sm:text-sm text-[#777D78] font-medium mt-1">
             Start tracking your blood glucose levels with Sweety
           </p>
         </div>
 
         {error && (
-          <div className="mb-6 p-3.5 bg-rose-50 border border-rose-200 text-rose-800 rounded-xl text-sm flex items-start gap-2.5">
-            <AlertCircle className="w-4 h-4 text-rose-600 mt-0.5 shrink-0" />
+          <div className="mb-6 p-4 bg-[#F15B52]/10 border border-[#F15B52]/20 text-[#F15B52] rounded-2xl text-xs sm:text-sm font-bold flex items-start gap-2.5">
+            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
             <span>{error}</span>
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">
+            <label className="block text-xs font-bold uppercase tracking-wider text-[#777D78] mb-1.5">
               Full Name
             </label>
             <div className="relative">
-              <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+              <User className="w-4 h-4 text-[#777D78] absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="Jane Doe"
+                placeholder="Alex Morgan"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition text-sm"
+                className="w-full pl-10 pr-4 py-3 bg-[#F7F8F5] border border-[#E9ECE7] rounded-2xl text-[#171917] font-semibold text-sm placeholder-[#777D78] focus:outline-none focus:border-[#C5F53C] focus:ring-2 focus:ring-[#C5F53C]/20 transition"
                 required
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">
+            <label className="block text-xs font-bold uppercase tracking-wider text-[#777D78] mb-1.5">
               Email Address
             </label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+              <Mail className="w-4 h-4 text-[#777D78] absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="email"
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition text-sm"
+                className="w-full pl-10 pr-4 py-3 bg-[#F7F8F5] border border-[#E9ECE7] rounded-2xl text-[#171917] font-semibold text-sm placeholder-[#777D78] focus:outline-none focus:border-[#C5F53C] focus:ring-2 focus:ring-[#C5F53C]/20 transition"
                 required
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">
+            <label className="block text-xs font-bold uppercase tracking-wider text-[#777D78] mb-1.5">
               Password
             </label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+              <Lock className="w-4 h-4 text-[#777D78] absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="password"
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition text-sm"
+                className="w-full pl-10 pr-4 py-3 bg-[#F7F8F5] border border-[#E9ECE7] rounded-2xl text-[#171917] font-semibold text-sm placeholder-[#777D78] focus:outline-none focus:border-[#C5F53C] focus:ring-2 focus:ring-[#C5F53C]/20 transition"
                 required
                 minLength={6}
               />
             </div>
-            <p className="mt-1 text-xs text-slate-500">Minimum 6 characters</p>
+            <p className="mt-1 text-[11px] text-[#777D78] font-medium">Minimum 6 characters</p>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">
+            <label className="block text-xs font-bold uppercase tracking-wider text-[#777D78] mb-1.5">
               Confirm Password
             </label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+              <Lock className="w-4 h-4 text-[#777D78] absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="password"
                 placeholder="••••••••"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition text-sm"
+                className="w-full pl-10 pr-4 py-3 bg-[#F7F8F5] border border-[#E9ECE7] rounded-2xl text-[#171917] font-semibold text-sm placeholder-[#777D78] focus:outline-none focus:border-[#C5F53C] focus:ring-2 focus:ring-[#C5F53C]/20 transition"
                 required
               />
             </div>
@@ -147,17 +149,17 @@ export default function Register() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full mt-2 inline-flex items-center justify-center gap-2 py-3 px-4 bg-sky-600 hover:bg-sky-700 disabled:opacity-60 text-white font-semibold rounded-xl shadow-md shadow-sky-500/20 transition cursor-pointer"
+            className="w-full mt-2 inline-flex items-center justify-center gap-2 py-3.5 px-4 bg-[#C5F53C] hover:bg-[#b8eb2f] disabled:opacity-60 text-[#101310] font-black rounded-2xl shadow-md transition active:scale-95 cursor-pointer text-sm"
           >
             <span>{isLoading ? "Creating Account..." : "Create Account"}</span>
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="w-4 h-4 stroke-[2.5]" />
           </button>
         </form>
 
-        <div className="mt-6 pt-6 border-t border-slate-100 text-center">
-          <p className="text-sm text-slate-600">
+        <div className="mt-6 pt-6 border-t border-[#E9ECE7] text-center">
+          <p className="text-xs sm:text-sm text-[#777D78] font-medium">
             Already have an account?{" "}
-            <Link to="/login" className="font-semibold text-sky-600 hover:text-sky-700 hover:underline">
+            <Link to="/login" className="font-extrabold text-[#171917] hover:underline">
               Sign In
             </Link>
           </p>
@@ -166,4 +168,3 @@ export default function Register() {
     </div>
   );
 }
-

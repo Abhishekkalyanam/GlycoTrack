@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import api from "../services/api";
 import { useNotification } from "../context/NotificationContext";
-import { PlusCircle, Calendar, Clock, Activity, AlertCircle, ArrowLeft } from "lucide-react";
+import { Plus, Calendar, Clock, Activity, AlertCircle, ArrowLeft } from "lucide-react";
 
 const TIME_SLOTS = [
   "Morning (fasting)",
@@ -13,15 +13,27 @@ const TIME_SLOTS = [
 
 export default function AddReading() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { showSuccess, showError } = useNotification();
 
   const todayStr = new Date().toISOString().split("T")[0];
+  const preselectedSlot = searchParams.get("slot");
 
   const [date, setDate] = useState(todayStr);
-  const [timeSlot, setTimeSlot] = useState(TIME_SLOTS[0]);
+  const [timeSlot, setTimeSlot] = useState(
+    preselectedSlot && TIME_SLOTS.includes(preselectedSlot)
+      ? preselectedSlot
+      : TIME_SLOTS[0]
+  );
   const [value, setValue] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (preselectedSlot && TIME_SLOTS.includes(preselectedSlot)) {
+      setTimeSlot(preselectedSlot);
+    }
+  }, [preselectedSlot]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,7 +73,7 @@ export default function AddReading() {
       });
 
       showSuccess(`Added ${timeSlot} reading (${num} mg/dl) successfully!`);
-      navigate("/history");
+      navigate("/");
     } catch (err) {
       const serverMessage = err.response?.data?.message || "Failed to add glucose reading.";
       setError(serverMessage);
@@ -72,47 +84,47 @@ export default function AddReading() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="max-w-xl mx-auto space-y-6">
       {/* Back button */}
       <button
         onClick={() => navigate(-1)}
-        className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-slate-800 transition"
+        className="inline-flex items-center gap-2 text-xs font-bold text-[#777D78] hover:text-[#171917] transition"
       >
         <ArrowLeft className="w-4 h-4" />
-        <span>Back</span>
+        <span>Back to Dashboard</span>
       </button>
 
       {/* Main Card */}
-      <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 sm:p-8">
-        <div className="flex items-center gap-3.5 mb-6">
-          <div className="w-12 h-12 bg-sky-50 text-sky-600 rounded-2xl flex items-center justify-center">
-            <PlusCircle className="w-6 h-6" />
+      <div className="bg-white rounded-3xl border border-[#E9ECE7] shadow-xs p-7 sm:p-9">
+        <div className="flex items-center gap-3.5 mb-7">
+          <div className="w-12 h-12 bg-[#101310] text-[#C5F53C] rounded-2xl flex items-center justify-center shadow-md">
+            <Plus className="w-6 h-6 stroke-[3]" />
           </div>
           <div>
-            <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-black text-[#171917] tracking-tight">
               Add Glucose Reading
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500">
-              Record a new blood sugar measurement into your personal diary
+            <p className="text-xs sm:text-sm text-[#777D78] font-medium">
+              Log a new blood sugar measurement into your daily diary
             </p>
           </div>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-rose-50 border border-rose-200 text-rose-800 rounded-2xl text-sm flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-rose-600 mt-0.5 shrink-0" />
-            <div className="font-medium">{error}</div>
+          <div className="mb-6 p-4 bg-[#F15B52]/10 border border-[#F15B52]/20 text-[#F15B52] rounded-2xl text-xs sm:text-sm font-bold flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+            <div>{error}</div>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Date Field */}
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Date Picker */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">
+            <label className="block text-xs font-bold uppercase tracking-wider text-[#777D78] mb-2">
               Measurement Date
             </label>
             <div className="relative">
-              <Calendar className="w-5 h-5 text-slate-400 absolute left-3.5 top-3" />
+              <Calendar className="w-5 h-5 text-[#777D78] absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="date"
                 max={todayStr}
@@ -121,27 +133,27 @@ export default function AddReading() {
                   setDate(e.target.value);
                   setError("");
                 }}
-                className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition"
+                className="w-full pl-11 pr-4 py-3 bg-[#F7F8F5] border border-[#E9ECE7] rounded-2xl text-[#171917] font-semibold text-sm focus:outline-none focus:border-[#C5F53C] focus:ring-2 focus:ring-[#C5F53C]/20 transition"
                 required
               />
             </div>
-            <p className="mt-1 text-xs text-slate-400">Future dates are disabled.</p>
+            <p className="mt-1.5 text-[11px] text-[#777D78] font-medium">Future dates are disabled.</p>
           </div>
 
-          {/* Time Slot Field */}
+          {/* Time Slot Selector */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">
+            <label className="block text-xs font-bold uppercase tracking-wider text-[#777D78] mb-2">
               Time Slot
             </label>
             <div className="relative">
-              <Clock className="w-5 h-5 text-slate-400 absolute left-3.5 top-3" />
+              <Clock className="w-5 h-5 text-[#777D78] absolute left-3.5 top-1/2 -translate-y-1/2" />
               <select
                 value={timeSlot}
                 onChange={(e) => {
                   setTimeSlot(e.target.value);
                   setError("");
                 }}
-                className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition appearance-none cursor-pointer"
+                className="w-full pl-11 pr-4 py-3 bg-[#F7F8F5] border border-[#E9ECE7] rounded-2xl text-[#171917] font-semibold text-sm focus:outline-none focus:border-[#C5F53C] focus:ring-2 focus:ring-[#C5F53C]/20 transition cursor-pointer"
               >
                 {TIME_SLOTS.map((slot) => (
                   <option key={slot} value={slot}>
@@ -150,18 +162,18 @@ export default function AddReading() {
                 ))}
               </select>
             </div>
-            <p className="mt-1 text-xs text-slate-400">
-              Only one reading per time slot per day is allowed.
+            <p className="mt-1.5 text-[11px] text-[#777D78] font-medium">
+              Only one reading per time slot per day is permitted.
             </p>
           </div>
 
           {/* Glucose Value Field */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">
+            <label className="block text-xs font-bold uppercase tracking-wider text-[#777D78] mb-2">
               Glucose Value (mg/dl)
             </label>
             <div className="relative">
-              <Activity className="w-5 h-5 text-slate-400 absolute left-3.5 top-3" />
+              <Activity className="w-5 h-5 text-[#777D78] absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="number"
                 min="40"
@@ -173,47 +185,36 @@ export default function AddReading() {
                   setValue(e.target.value);
                   setError("");
                 }}
-                className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-base font-bold focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition placeholder:font-normal placeholder:text-slate-400"
+                className="w-full pl-11 pr-4 py-3.5 bg-[#F7F8F5] border border-[#E9ECE7] rounded-2xl text-[#171917] font-black text-xl focus:outline-none focus:border-[#C5F53C] focus:ring-2 focus:ring-[#C5F53C]/20 transition placeholder:font-normal placeholder:text-sm placeholder:text-[#777D78]"
                 required
               />
             </div>
-            <div className="mt-2 flex items-center justify-between text-xs text-slate-500">
-              <span>Valid range: 40 to 600 mg/dl</span>
-              <span className="font-semibold text-sky-700">Whole numbers only</span>
+            <div className="mt-2 flex items-center justify-between text-[11px] text-[#777D78] font-medium">
+              <span>Allowed range: 40 to 600 mg/dl</span>
+              <span className="font-bold text-[#101310]">Whole numbers only</span>
             </div>
           </div>
 
-          {/* Submit Button */}
-          <div className="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
+          {/* Action Buttons */}
+          <div className="pt-5 border-t border-[#E9ECE7] flex items-center justify-end gap-3">
             <button
               type="button"
-              onClick={() => navigate("/history")}
-              className="px-5 py-3 text-sm font-semibold text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition"
+              onClick={() => navigate("/")}
+              className="px-5 py-3 text-sm font-bold text-[#777D78] hover:text-[#171917] hover:bg-[#F7F8F5] rounded-2xl transition"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="inline-flex items-center gap-2 bg-sky-600 hover:bg-sky-700 disabled:opacity-60 text-white font-bold text-sm px-7 py-3 rounded-xl shadow-md shadow-sky-500/20 transition cursor-pointer"
+              className="inline-flex items-center gap-2 bg-[#C5F53C] hover:bg-[#b8eb2f] disabled:opacity-60 text-[#101310] font-black text-sm px-7 py-3 rounded-2xl shadow-md transition active:scale-95 cursor-pointer"
             >
-              <PlusCircle className="w-5 h-5" />
+              <Plus className="w-5 h-5 stroke-[3]" />
               <span>{isSubmitting ? "Saving Reading..." : "Save Reading"}</span>
             </button>
           </div>
         </form>
       </div>
-
-      {/* Quick Guideline Box */}
-      <div className="bg-sky-50/60 border border-sky-100 rounded-2xl p-5 text-xs text-slate-600 space-y-2">
-        <h4 className="font-bold text-sky-900 text-sm">Logging Guidelines</h4>
-        <ul className="list-disc list-inside space-y-1 text-slate-600">
-          <li><strong>Morning (fasting):</strong> Measure immediately after waking, before breakfast.</li>
-          <li><strong>After meals:</strong> Typically 1 to 2 hours after breakfast, lunch, or dinner.</li>
-          <li>Each day supports up to 4 readings (one per each designated slot).</li>
-        </ul>
-      </div>
     </div>
   );
 }
-

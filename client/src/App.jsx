@@ -18,10 +18,12 @@ function ProtectedRoute({ children }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-3 text-slate-500">
-          <div className="w-8 h-8 border-3 border-sky-600 border-t-transparent rounded-full animate-spin" />
-          <span className="text-xs font-semibold">Loading Sweety...</span>
+      <div className="min-h-screen bg-[#F7F8F5] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3 text-[#171917]">
+          <div className="w-9 h-9 border-3 border-[#101310] border-t-[#C5F53C] rounded-full animate-spin" />
+          <span className="text-xs font-bold uppercase tracking-wider text-[#777D78]">
+            Loading Sweety...
+          </span>
         </div>
       </div>
     );
@@ -39,10 +41,12 @@ function PublicRoute({ children }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-3 text-slate-500">
-          <div className="w-8 h-8 border-3 border-sky-600 border-t-transparent rounded-full animate-spin" />
-          <span className="text-xs font-semibold">Loading Sweety...</span>
+      <div className="min-h-screen bg-[#F7F8F5] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3 text-[#171917]">
+          <div className="w-9 h-9 border-3 border-[#101310] border-t-[#C5F53C] rounded-full animate-spin" />
+          <span className="text-xs font-bold uppercase tracking-wider text-[#777D78]">
+            Loading Sweety...
+          </span>
         </div>
       </div>
     );
