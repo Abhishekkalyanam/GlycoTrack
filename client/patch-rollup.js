@@ -20,3 +20,4 @@ if (fs.existsSync(nativeJsPath)) {
     console.log('[patch-rollup] Patched rollup to support wasm fallback on Windows App Control environments.');
   }
 }
+

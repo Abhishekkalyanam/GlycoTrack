@@ -61,3 +61,4 @@ export default function StatCard({ title, value, unit, icon: Icon, color = "sky"
     </div>
   );
 }
+

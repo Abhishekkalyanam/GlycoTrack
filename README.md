@@ -375,3 +375,4 @@ Validation is strictly enforced on **both frontend and backend**:
 - Automated email or SMS reminders for missing meal slots.
 - Multi-language support (i18n).
 - Dark mode toggle.
+

@@ -16,3 +16,4 @@ router.get("/monthly", getPreviousMonthReport);
 router.get("/previous-month", getPreviousMonthReport);
 
 module.exports = router;
+
